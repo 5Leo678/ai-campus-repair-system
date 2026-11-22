@@ -1,0 +1,109 @@
+<view class="page-container order-page">
+  <view class="list-heading">
+    <view class="heading-mark">▤</view>
+    <view class="heading-copy">
+      <text class="heading-title">我的工单</text>
+      <text class="heading-subtitle">查看报修处理进度</text>
+    </view>
+    <view class="heading-actions">
+      <button class="refresh-button" bindtap="handleRefresh" disabled="{{loading}}"><text class="button-icon">↻</text>刷新</button>
+    </view>
+    <view class="banner-dot dot-one"></view>
+    <view class="banner-dot dot-two"></view>
+  </view>
+
+  <view class="status-filters">
+    <text
+      wx:for="{{statusOptions}}"
+      wx:key="value"
+      class="status-filter {{statusFilter === item.value ? 'active' : ''}}"
+      data-status="{{item.value}}"
+      bindtap="handleStatusFilter"
+    >{{item.label}}</text>
+  </view>
+
+  <view class="search-bar">
+    <input
+      class="search-input"
+      type="text"
+      value="{{searchInput}}"
+      placeholder="搜索标题、地点、描述或故障类型"
+      confirm-type="search"
+      bindinput="handleSearchInput"
+      bindconfirm="handleSearch"
+    />
+    <button class="search-button" bindtap="handleSearch"><text class="button-icon">⌕</text>搜索</button>
+    <button wx:if="{{searchInput || searchKeyword}}" class="clear-search-button" bindtap="handleClearSearch">清空</button>
+  </view>
+
+  <view wx:if="{{loading && !loaded}}" class="state-container">
+    <view class="loading-dot"></view>
+    <text class="state-text">正在加载工单...</text>
+  </view>
+
+  <view wx:elif="{{!loading && loadError}}" class="state-container empty-state">
+    <view class="empty-icon"><view class="empty-art-line"></view>!</view>
+    <text class="empty-title">工单加载失败</text>
+    <text class="state-text">请点击右上角刷新后重试</text>
+  </view>
+
+  <view wx:elif="{{!loading && orders.length === 0}}" class="state-container empty-state">
+    <block wx:if="{{searchKeyword || statusFilter}}">
+      <view class="empty-icon"><view class="empty-art-line"></view>?</view>
+      <text class="empty-title">没有找到相关工单</text>
+      <text class="state-text">试试其他关键词，或清空搜索条件</text>
+    </block>
+    <block wx:else>
+      <view class="empty-icon"><view class="empty-art-line"></view>单</view>
+      <text class="empty-title">暂无报修工单</text>
+      <text class="state-text">提交报修后，处理进度会显示在这里</text>
+    </block>
+  </view>
+
+  <view wx:else class="order-list">
+    <view class="result-caption">
+      <view class="result-dot"></view>
+      <text wx:if="{{searchKeyword}}">为你找到 {{orders.length}} 条相关工单</text>
+      <text wx:else>共 {{orders.length}} 条本人报修记录</text>
+    </view>
+    <view class="order-card" wx:for="{{orders}}" wx:key="id" data-id="{{item.id}}" bindtap="handleOpenDetail">
+      <view class="card-top">
+        <text class="order-title">{{item.title}}</text>
+        <text class="status-tag {{item.statusClass}}">{{item.statusText}}</text>
+      </view>
+      <text class="order-location">地点：{{item.location}}</text>
+      <text class="order-desc">{{item.desc}}</text>
+      <text wx:if="{{item.expectedCompletionAt && item.status !== '已完成' && item.status !== '已撤销'}}" class="expected-time">预计处理完成：{{item.expectedTime}}</text>
+      <view class="card-footer">
+        <view class="order-meta">
+          <text wx:if="{{item.aiCategory}}" class="category">分类：{{item.aiCategory}}</text>
+          <text class="order-number">工单 #{{item.id}}</text>
+        </view>
+        <text class="order-time">{{item.displayTime}}</text>
+      </view>
+      <button
+        wx:if="{{item.canCancel}}"
+        class="cancel-button"
+        size="mini"
+        data-id="{{item.id}}"
+        catchtap="handleCancel"
+        loading="{{cancelingOrderId == item.id}}"
+        disabled="{{cancelingOrderId}}"
+      >
+        撤销
+      </button>
+      <button
+        wx:if="{{item.canDelete}}"
+        class="delete-button"
+        size="mini"
+        data-id="{{item.id}}"
+        data-title="{{item.title}}"
+        catchtap="handleDelete"
+        loading="{{deletingOrderId == item.id}}"
+        disabled="{{deletingOrderId || cancelingOrderId}}"
+      >
+        删除
+      </button>
+    </view>
+  </view>
+</view>

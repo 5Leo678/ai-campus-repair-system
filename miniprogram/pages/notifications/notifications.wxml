@@ -1,0 +1,41 @@
+<view class="page-container notifications-page">
+  <view class="page-heading">
+    <view class="heading-mark">✉</view>
+    <view class="heading-copy">
+      <text class="heading-title">消息通知</text>
+      <text class="heading-subtitle">工单进度有更新时会在这里提醒你</text>
+    </view>
+    <view class="banner-dot dot-one"></view>
+    <view class="banner-dot dot-two"></view>
+  </view>
+
+  <view wx:if="{{loading}}" class="state-container">
+    <view class="loading-dot"></view>
+    <text class="state-text">正在加载消息...</text>
+  </view>
+  <view wx:elif="{{notifications.length === 0}}" class="state-container empty-state">
+    <view class="empty-icon"><view class="empty-art-line"></view>信</view>
+    <text class="empty-title">暂时没有新消息</text>
+    <text class="state-text">工单状态更新后会显示在这里</text>
+  </view>
+  <view wx:else class="notification-list">
+    <view
+      wx:for="{{notifications}}"
+      wx:key="id"
+      class="notification-card {{item.readAt ? 'read' : 'unread'}}"
+      data-id="{{item.id}}"
+      data-order-id="{{item.orderId}}"
+      bindtap="openNotification"
+    >
+      <view class="notification-heading">
+        <view class="notification-title-wrap">
+          <view wx:if="{{!item.readAt}}" class="unread-dot"></view>
+          <text class="notification-title">{{item.title}}</text>
+        </view>
+        <text class="notification-time">{{item.displayTime}}</text>
+      </view>
+      <text class="notification-message">{{item.message}}</text>
+      <text class="notification-link">查看工单详情 ›</text>
+    </view>
+  </view>
+</view>

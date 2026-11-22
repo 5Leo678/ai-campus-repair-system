@@ -1,0 +1,57 @@
+<view class="page-container drafts-page">
+  <view class="page-heading">
+    <view class="heading-mark">▧</view>
+    <view class="heading-copy">
+      <text class="heading-title">报修草稿箱</text>
+      <text class="heading-subtitle">草稿只保存在当前设备，不会提交给维修人员</text>
+    </view>
+    <view class="banner-dot dot-one"></view>
+    <view class="banner-dot dot-two"></view>
+  </view>
+
+  <view class="draft-summary">
+    <text>共 {{drafts.length}} 份草稿</text>
+    <button class="new-draft-button" bindtap="createDraft"><text class="button-icon">＋</text>新建草稿</button>
+  </view>
+
+  <view wx:if="{{loading}}" class="state-container">
+    <view class="loading-dot"></view>
+    <text class="state-text">正在读取本地草稿...</text>
+  </view>
+
+  <view wx:elif="{{drafts.length}}" class="draft-list">
+    <view wx:for="{{drafts}}" wx:key="id" class="draft-card">
+      <view class="draft-card-heading">
+        <text class="draft-title">{{item.displayTitle}}</text>
+        <text class="draft-time">{{item.displayTime}}</text>
+      </view>
+      <text class="draft-location">地点：{{item.displayLocation}}</text>
+      <text class="draft-description">{{item.displayDescription}}</text>
+      <view class="draft-meta">
+        <text wx:if="{{item.categoryValue}}" class="draft-tag">{{item.categoryValue}}</text>
+        <text wx:if="{{item.hasImage}}" class="draft-tag image-tag">已保存图片</text>
+        <text wx:if="{{item.mapAddress}}" class="draft-tag map-tag">已选地图位置</text>
+      </view>
+      <view class="draft-actions">
+        <button
+          class="continue-button"
+          data-id="{{item.id}}"
+          bindtap="continueDraft"
+        >继续编辑</button>
+        <button
+          class="delete-button"
+          data-id="{{item.id}}"
+          data-title="{{item.displayTitle}}"
+          bindtap="deleteDraft"
+        >删除</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:elif="{{!loading}}" class="empty-state">
+    <view class="empty-icon"><view class="empty-art-line"></view>稿</view>
+    <text class="empty-title">草稿箱还是空的</text>
+    <text class="empty-copy">填写报修内容后保存草稿，可稍后继续提交</text>
+    <button class="new-draft-button empty-new-button" bindtap="createDraft"><text class="button-icon">＋</text>去填写报修内容</button>
+  </view>
+</view>

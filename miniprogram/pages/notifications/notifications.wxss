@@ -1,0 +1,244 @@
+.notifications-page {
+  min-height: 100vh;
+}
+
+.page-heading {
+  display: flex;
+  min-height: 144rpx;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 0 26rpx;
+  padding: 26rpx 28rpx;
+  border: 1rpx solid #d7e9da;
+  border-radius: 24rpx;
+  background: #ffffff;
+  box-shadow: 0 10rpx 26rpx rgba(48, 91, 56, 0.045);
+}
+
+.heading-title {
+  color: #203f31;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.heading-subtitle {
+  margin-top: 12rpx;
+  color: #718a78;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.notification-card {
+  margin-bottom: 20rpx;
+  padding: 26rpx;
+  border: 1rpx solid #e3ede3;
+  border-radius: 22rpx;
+  background: #ffffff;
+  box-shadow: 0 12rpx 28rpx rgba(37, 73, 48, 0.055);
+}
+
+.notification-card.unread {
+  border-color: #cee5d1;
+  background: #ffffff;
+}
+
+.notification-heading,
+.notification-title-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.notification-heading {
+  justify-content: space-between;
+}
+
+.notification-title-wrap {
+  min-width: 0;
+}
+
+.unread-dot {
+  flex-shrink: 0;
+  width: 12rpx;
+  height: 12rpx;
+  margin-right: 12rpx;
+  border-radius: 50%;
+  background: #4aa06a;
+}
+
+.notification-title {
+  color: #365443;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.notification-time {
+  flex-shrink: 0;
+  margin-left: 12rpx;
+  color: #95a599;
+  font-size: 20rpx;
+}
+
+.notification-message {
+  display: block;
+  margin-top: 18rpx;
+  color: #6b8172;
+  font-size: 25rpx;
+  line-height: 1.7;
+}
+
+.notification-link {
+  display: block;
+  margin-top: 20rpx;
+  color: #38835a;
+  font-size: 23rpx;
+  text-align: right;
+}
+
+.state-container {
+  display: flex;
+  min-height: 360rpx;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #829589;
+}
+
+.empty-icon {
+  display: flex;
+  width: 96rpx;
+  height: 96rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e6f4e7;
+  color: #25845f;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.empty-title {
+  margin-top: 26rpx;
+  color: #385344;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.state-text {
+  margin-top: 14rpx;
+  color: #91a294;
+  font-size: 24rpx;
+}
+
+.loading-dot {
+  width: 34rpx;
+  height: 34rpx;
+  margin-bottom: 22rpx;
+  border: 5rpx solid #dfe4e1;
+  border-top-color: #718579;
+  border-radius: 50%;
+}
+
+.page-heading {
+  min-height: 0;
+  border: 0;
+  border-radius: 18rpx;
+  background: #ffffff;
+  box-shadow: 0 6rpx 20rpx rgba(35, 46, 40, 0.04);
+}
+
+.heading-title,
+.empty-title {
+  color: #222222;
+}
+
+.heading-subtitle,
+.notification-time,
+.state-text {
+  color: #999999;
+}
+
+.notification-card,
+.notification-card.unread {
+  border: 0;
+  border-radius: 18rpx;
+  background: #ffffff;
+  box-shadow: 0 6rpx 20rpx rgba(35, 46, 40, 0.04);
+}
+
+.notification-title,
+.notification-message {
+  color: #444444;
+}
+
+.unread-dot {
+  background: #718579;
+}
+
+.notification-link {
+  display: table;
+  margin: 20rpx 0 0 auto;
+  padding: 8rpx 16rpx;
+  border: 1rpx solid #89998f;
+  border-radius: 18rpx;
+  color: #65796d;
+}
+
+.empty-icon {
+  background: #eef1ef;
+  color: #65796d;
+}
+
+.loading-dot {
+  border-color: #dfe4e1;
+  border-top-color: #718579;
+}
+
+.page-heading {
+  min-height: 150rpx;
+}
+
+.page-heading {
+  display: flex;
+  align-items: center;
+  min-height: 148rpx;
+  margin: 0 0 24rpx;
+  padding: 24rpx;
+  border: 0;
+  border-radius: 20rpx;
+  background: linear-gradient(120deg, #e1f0e9, #eaf2f6 68%, #f8edef);
+  box-shadow: 0 8rpx 22rpx rgba(76, 118, 99, 0.08);
+}
+
+.heading-mark {
+  margin-right: 18rpx;
+}
+
+.heading-title {
+  color: #222222;
+  font-size: 38rpx;
+}
+
+.heading-subtitle {
+  color: #999999;
+  font-size: 22rpx;
+}
+
+.notification-card {
+  margin-bottom: 22rpx;
+  padding: 26rpx;
+  border-radius: 20rpx;
+}
+
+.notification-card,
+.notification-card.unread {
+  background: linear-gradient(145deg, #ffffff, #ffffff 74%, #f3f9f6);
+}
+
+.notification-card.unread {
+  border-left: 5rpx solid #9bc7b4;
+}
+
+.unread-dot {
+  background: linear-gradient(145deg, #72af96, #9acbb5);
+  box-shadow: 0 0 0 5rpx rgba(133, 188, 164, 0.14);
+}

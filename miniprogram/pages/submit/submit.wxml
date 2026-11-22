@@ -1,0 +1,176 @@
+<view class="page-container">
+  <view class="page-heading">
+    <view class="heading-mark">⌂</view>
+    <view class="heading-copy">
+      <text class="heading-title">提交报修</text>
+      <text class="heading-subtitle">请填写故障信息，我们会尽快处理</text>
+      <text wx:if="{{hasDraft}}" class="draft-status">
+        草稿已保存{{draftSavedAt ? ' · ' + draftSavedAt : ''}}
+      </text>
+    </view>
+    <view class="banner-dot dot-one"></view>
+    <view class="banner-dot dot-two"></view>
+  </view>
+
+  <view class="form-card">
+    <view class="form-item">
+      <text class="label"><text class="field-icon">⌖</text>报修地点 <text class="required">*</text></text>
+      <input
+        class="text-input"
+        placeholder="楼栋，例如：1号楼"
+        value="{{building}}"
+        data-field="building"
+        bindinput="handleInput"
+        maxlength="100"
+      />
+      <view wx:if="{{buildingOptions.length}}" class="building-suggestions">
+        <text
+          wx:for="{{buildingOptions}}"
+          wx:key="*this"
+          class="building-suggestion"
+          data-building="{{item}}"
+          bindtap="selectBuilding"
+        >{{item}}</text>
+      </view>
+      <view class="location-subfields">
+        <input
+          class="text-input location-small"
+          placeholder="楼层（选填）"
+          value="{{floor}}"
+          data-field="floor"
+          bindinput="handleInput"
+          maxlength="40"
+        />
+        <input
+          class="text-input location-small"
+          placeholder="房间/具体位置"
+          value="{{room}}"
+          data-field="room"
+          bindinput="handleInput"
+          maxlength="80"
+        />
+      </view>
+      <text class="helper-text">楼栋和房间/具体位置为必填项</text>
+      <button class="map-location-button" bindtap="scanLocationCode"><text class="button-icon">⌗</text>扫码填入地点</button>
+      <button class="map-location-button" bindtap="chooseMapLocation"><text class="button-icon">⌖</text>地图选点（选填）</button>
+      <text wx:if="{{mapAddress}}" class="helper-text">地图位置：{{mapAddress}}</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label"><text class="field-icon">≡</text>补充说明</text>
+      <textarea
+        class="textarea-input short-textarea"
+        placeholder="可补充方便维修人员定位或联系的信息"
+        value="{{additionalDescription}}"
+        data-field="additionalDescription"
+        bindinput="handleInput"
+        maxlength="1000"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label"><text class="field-icon">▤</text>故障类型 <text class="required">*</text></text>
+      <picker
+        mode="selector"
+        range="{{categoryOptions}}"
+        value="{{categoryIndex}}"
+        bindchange="handleCategoryChange"
+      >
+        <view class="picker-value {{categoryIndex === 0 ? 'placeholder' : ''}}">
+          {{categoryOptions[categoryIndex]}}
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label"><text class="field-icon">✎</text>故障描述 <text class="required">*</text></text>
+      <textarea
+        class="textarea-input"
+        placeholder="请描述设备故障情况"
+        value="{{desc}}"
+        data-field="desc"
+        bindinput="handleInput"
+        maxlength="2000"
+      />
+      <button
+        class="ai-analysis-button"
+        loading="{{aiAnalyzing}}"
+        disabled="{{aiAnalyzing}}"
+        bindtap="analyzeDescription"
+      ><text class="button-icon">✦</text>AI 智能分析</button>
+      <view wx:if="{{aiAnalysis}}" class="ai-analysis-card">
+        <view class="ai-analysis-heading">AI 初步判断</view>
+        <view class="ai-analysis-line">建议分类：{{aiAnalysis.category}}</view>
+        <view class="ai-analysis-line">安全自查：{{aiAnalysis.suggestion}}</view>
+        <text class="ai-analysis-note">分析结果仅供参考；请勿拆卸设备或触碰裸露电线。</text>
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="label"><text class="field-icon">▧</text>故障图片</text>
+      <view wx:if="{{imagePath}}" class="image-preview-wrap">
+        <image
+          class="image-preview"
+          src="{{imagePath}}"
+          mode="aspectFill"
+          bindtap="handlePreviewImage"
+        />
+        <view class="remove-image" catchtap="handleRemoveImage">×</view>
+      </view>
+      <button
+        wx:else
+        class="image-upload-button"
+        bindtap="handleChooseImage"
+        disabled="{{submitting}}"
+      >
+        <text class="upload-icon">+</text>
+        <text>拍照或从相册选择</text>
+      </button>
+      <text class="helper-text">支持 JPG、PNG、WebP，图片不超过 5MB</text>
+    </view>
+
+    <view class="form-item last-item">
+      <text class="label"><text class="field-icon">☎</text>联系电话 <text class="required">*</text></text>
+      <input
+        class="text-input"
+        type="text"
+        placeholder="请输入可联系到你的电话号码"
+        value="{{phone}}"
+        data-field="phone"
+        bindinput="handleInput"
+        maxlength="20"
+      />
+      <text class="helper-text">本号码仅用于本次报修，不会修改个人资料</text>
+    </view>
+  </view>
+
+  <view class="draft-actions">
+    <button
+      class="draft-button"
+      bindtap="handleSaveDraft"
+      disabled="{{submitting}}"
+    >保存草稿</button>
+    <button
+      class="draft-button"
+      bindtap="handleSaveAsNewDraft"
+      disabled="{{submitting}}"
+    >另存为新草稿</button>
+    <button
+      wx:if="{{hasDraft}}"
+      class="draft-button clear-draft-button"
+      bindtap="handleClearDraft"
+      disabled="{{submitting}}"
+    >清空草稿</button>
+  </view>
+  <text class="draft-hint">草稿保存在当前设备；图片能否恢复取决于本地文件保存结果</text>
+
+  <button
+    class="primary-button submit-button"
+    loading="{{submitting}}"
+    disabled="{{submitting}}"
+    bindtap="handleSubmit"
+  >
+    <text class="button-icon">✓</text>提交报修
+  </button>
+</view>

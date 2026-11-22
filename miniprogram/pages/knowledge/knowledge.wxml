@@ -1,0 +1,24 @@
+<view class="page-container knowledge-page">
+  <view class="page-heading">
+    <view class="heading-mark">⌕</view>
+    <view class="heading-copy">
+      <text class="heading-title">报修安全指南</text>
+      <text class="heading-subtitle">遇到危险先远离，再联系校园维修人员</text>
+    </view>
+    <view class="banner-dot dot-one"></view>
+    <view class="banner-dot dot-two"></view>
+  </view>
+
+  <view class="safety-notice">
+    <view class="section-heading"><text class="section-icon alert-icon">!</text><text class="notice-title">请勿自行拆卸或维修</text></view>
+    <text class="notice-copy">如发现烟雾、火花、焦味、裸露电线或其他即时危险，请先停止使用并远离现场，再联系校园管理人员；紧急情况请拨打当地紧急电话。</text>
+  </view>
+
+  <view wx:for="{{guides}}" wx:key="title" class="guide-card">
+    <view class="section-heading"><text class="section-icon">✓</text><text class="guide-title">{{item.title}}</text></view>
+    <view wx:for="{{item.items}}" wx:for-item="guide" wx:key="*this" class="guide-line">
+      <view class="guide-dot"></view>
+      <text class="guide-copy">{{guide}}</text>
+    </view>
+  </view>
+</view>

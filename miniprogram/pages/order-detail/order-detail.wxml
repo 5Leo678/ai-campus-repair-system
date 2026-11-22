@@ -1,0 +1,216 @@
+<view class="page-container detail-page">
+  <view wx:if="{{loading}}" class="state-container">
+    <view class="loading-dot"></view>
+    <text class="state-text">正在加载工单详情...</text>
+  </view>
+
+  <view wx:elif="{{order}}" class="detail-card">
+    <view class="detail-heading">
+      <view class="detail-heading-copy">
+        <view class="detail-banner-mark">▤</view>
+        <view class="detail-heading-text">
+          <text class="detail-kicker">校园报修 · 工单详情</text>
+          <text class="detail-title">{{order.title}}</text>
+        </view>
+      </view>
+      <text class="status-tag {{order.statusClass}}">{{order.statusText}}</text>
+      <view class="banner-dot dot-one"></view>
+      <view class="banner-dot dot-two"></view>
+    </view>
+
+    <view class="detail-item">
+      <text class="detail-label">工单编号</text>
+      <text class="detail-value">{{order.id}}</text>
+    </view>
+    <view class="detail-item">
+      <text class="detail-label">报修地点</text>
+      <text class="detail-value">{{order.location}}</text>
+    </view>
+    <view wx:if="{{order.mapAddress || order.latitude !== null && order.latitude !== undefined}}" class="detail-item">
+      <text class="detail-label">地图定位</text>
+      <text class="detail-value">{{order.mapAddress || '已记录地图坐标'}}</text>
+      <button wx:if="{{order.latitude !== null && order.latitude !== undefined}}" class="map-open-button" bindtap="openOrderMap">在地图中查看</button>
+    </view>
+    <view wx:if="{{order.additionalDescription}}" class="detail-item">
+      <text class="detail-label">地点补充说明</text>
+      <text class="detail-value multiline">{{order.additionalDescription}}</text>
+    </view>
+    <view wx:if="{{order.expectedCompletionAt && !order.isCompleted}}" class="detail-item">
+      <text class="detail-label">预计处理完成</text>
+      <text class="detail-value">{{order.expectedTime}}</text>
+      <text class="review-hint">依据当前处理时限估算，实际完成时间可能变化</text>
+    </view>
+    <view class="detail-item">
+      <text class="detail-label">维修负责人</text>
+      <text class="detail-value">{{order.assignedTo || '暂未分派'}}</text>
+    </view>
+    <view class="detail-item">
+      <text class="detail-label">故障描述</text>
+      <text class="detail-value multiline">{{order.desc}}</text>
+    </view>
+    <view wx:if="{{order.imgUrl}}" class="detail-item">
+      <text class="detail-label">故障图片</text>
+      <image
+        class="repair-image"
+        src="{{order.imgUrl}}"
+        mode="widthFix"
+        bindtap="previewRepairImage"
+      />
+    </view>
+    <view class="detail-item">
+      <text class="detail-label">联系电话</text>
+      <text class="detail-value">{{order.phone || order.user.phone || '暂无'}}</text>
+    </view>
+    <view class="detail-item">
+      <text class="detail-label">提交时间</text>
+      <text class="detail-value">{{order.displayTime}}</text>
+    </view>
+    <view wx:if="{{order.aiCategory}}" class="detail-item">
+      <text class="detail-label">故障分类</text>
+      <text class="detail-value">{{order.aiCategory}}</text>
+    </view>
+    <view class="detail-item">
+      <text class="detail-label">AI 自查建议</text>
+      <text wx:if="{{order.aiSuggest}}" class="detail-value multiline">{{order.aiSuggest}}</text>
+      <text wx:else class="detail-value multiline">当前暂无 AI 自查建议，请联系校园维修人员处理。</text>
+    </view>
+    <view wx:if="{{order.adminRemark}}" class="detail-item last-item">
+      <text class="detail-label">维修备注</text>
+      <text class="detail-value multiline">{{order.adminRemark}}</text>
+    </view>
+    <view wx:if="{{order.isCompleted}}" class="detail-item">
+      <text class="detail-label">完工说明</text>
+      <text class="detail-value multiline">{{order.completionNote || '暂无'}}</text>
+    </view>
+    <view wx:if="{{order.completionImgUrl}}" class="detail-item">
+      <text class="detail-label">完工照片</text>
+      <image
+        class="repair-image"
+        src="{{order.completionImgUrl}}"
+        mode="widthFix"
+        bindtap="previewCompletionImage"
+      />
+    </view>
+    <view wx:if="{{order.isCompleted}}" class="completion-actions">
+      <view class="section-heading"><text class="section-icon">✓</text><text class="section-title">维修结果确认</text></view>
+      <text wx:if="{{order.isConfirmed}}" class="review-hint">你已确认维修完成</text>
+      <button wx:else class="review-button" bindtap="confirmCompletion"><text class="button-icon">✓</text>确认维修完成</button>
+      <text wx:if="{{order.reopenRequestedAt}}" class="review-hint">已提交重新处理申请，等待管理员处理</text>
+      <view wx:else class="reopen-request">
+        <textarea
+          class="review-input"
+          placeholder="若问题仍未解决，请说明原因后申请重新处理"
+          value="{{reopenReason}}"
+          bindinput="handleReopenReasonInput"
+          maxlength="1000"
+        />
+        <button
+          class="review-button secondary"
+          loading="{{submittingRequest}}"
+          disabled="{{submittingRequest}}"
+          bindtap="requestReopen"
+        ><text class="button-icon">↺</text>申请重新处理</button>
+      </view>
+    </view>
+    <view wx:if="{{order.history.length}}" class="history-section">
+      <view class="section-heading"><text class="section-icon">◷</text><text class="section-title">处理进度</text></view>
+      <view class="timeline">
+        <view wx:for="{{order.history}}" wx:key="id" class="timeline-item">
+          <view class="timeline-marker"></view>
+          <view class="timeline-content">
+            <view class="timeline-heading">
+              <text class="timeline-title">{{item.eventLabel}}</text>
+              <text class="timeline-time">{{item.displayTime}}</text>
+            </view>
+            <text wx:if="{{item.status}}" class="timeline-note">当前状态：{{item.status}}</text>
+            <text wx:if="{{item.assignedTo}}" class="timeline-note">负责人：{{item.assignedTo}}</text>
+            <text wx:if="{{item.remark}}" class="timeline-note">{{item.remark}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="review-card">
+      <view class="section-heading"><text class="section-icon">✉</text><text class="section-title">补充资料与沟通</text></view>
+      <view wx:for="{{messages}}" wx:key="id" class="message-item">
+        <view class="message-heading">
+          <text class="message-sender">{{item.senderLabel}}</text>
+          <text class="timeline-time">{{item.displayTime}}</text>
+        </view>
+        <text class="message-content">{{item.content}}</text>
+        <image
+          wx:if="{{item.imageUrl}}"
+          class="repair-image"
+          src="{{item.imageUrl}}"
+          mode="widthFix"
+          data-url="{{item.imageUrl}}"
+          bindtap="previewMessageImage"
+        />
+      </view>
+      <textarea
+        class="review-input"
+        placeholder="补充故障情况或与维修人员沟通（最多2000字）"
+        value="{{messageInput}}"
+        bindinput="handleMessageInput"
+        maxlength="2000"
+      />
+      <view class="message-actions">
+        <button class="message-image-button" bindtap="chooseMessageImage"><text class="button-icon">＋</text>添加图片</button>
+        <text wx:if="{{messageImagePath}}" class="remove-message-image" bindtap="removeMessageImage">已选图片，点击移除</text>
+      </view>
+      <button
+        class="review-button"
+        loading="{{sendingMessage}}"
+        disabled="{{sendingMessage}}"
+        bindtap="sendMessage"
+      ><text class="button-icon">↗</text>发送补充信息</button>
+    </view>
+    <view wx:if="{{order.isCompleted && !order.review}}" class="review-card">
+      <view class="section-heading"><text class="section-icon">☆</text><text class="section-title">维修服务评价</text></view>
+      <text class="review-hint">本次维修体验怎么样？</text>
+      <view class="rating-options">
+        <text
+          wx:for="{{order.ratingValues}}"
+          wx:key="*this"
+          class="rating-star {{item <= selectedRating ? 'selected' : ''}}"
+          data-rating="{{item}}"
+          bindtap="handleSelectRating"
+        >★</text>
+      </view>
+      <picker range="{{feedbackTypes}}" range-key="label" value="{{feedbackTypeIndex}}" bindchange="handleFeedbackTypeChange">
+        <view class="feedback-type-picker">评价方面：{{feedbackTypes[feedbackTypeIndex].label}}　›</view>
+      </picker>
+      <textarea
+        class="review-input"
+        placeholder="写下你的建议（选填）"
+        value="{{reviewComment}}"
+        bindinput="handleReviewInput"
+        maxlength="1000"
+      />
+      <button
+        class="review-button"
+        loading="{{submittingReview}}"
+        disabled="{{submittingReview}}"
+        bindtap="submitReview"
+      ><text class="button-icon">✓</text>提交评价</button>
+    </view>
+    <view wx:if="{{order.review}}" class="review-card">
+      <view class="section-heading"><text class="section-icon">☆</text><text class="section-title">我的评价</text></view>
+      <view class="rating-options">
+        <text
+          wx:for="{{order.ratingValues}}"
+          wx:key="*this"
+          class="rating-star {{item <= order.review.rating ? 'selected' : ''}}"
+        >★</text>
+      </view>
+      <text wx:if="{{order.review.comment}}" class="detail-value multiline">{{order.review.comment}}</text>
+      <text wx:if="{{order.review.feedbackType}}" class="review-hint">评价方面：{{order.feedbackTypeLabel}}</text>
+      <text wx:if="{{order.review.adminFollowup}}" class="review-hint">维修方回复：{{order.review.adminFollowup}}</text>
+    </view>
+  </view>
+
+  <view wx:elif="{{!loading}}" class="state-container">
+    <view class="empty-icon"><view class="empty-art-line"></view>单</view>
+    <text class="empty-title">暂时无法查看工单</text>
+    <text class="state-text">请返回工单列表后重试</text>
+  </view>
+</view>

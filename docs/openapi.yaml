@@ -1,0 +1,111 @@
+openapi: 3.0.3
+info:
+  title: Campus AI Repair API
+  version: 1.0.0
+  description: API for WeChat Mini Program, admin web and maintenance workbench.
+servers:
+  - url: http://localhost:3000/api
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /:
+    get:
+      summary: Backend health response
+      security: []
+      responses:
+        '200':
+          description: Service is running
+  /auth/adminlogin:
+    post:
+      summary: Administrator login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login succeeded
+  /maintenance/auth/login:
+    post:
+      summary: Maintenance staff login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login succeeded
+  /maintenance/orders:
+    get:
+      summary: List orders assigned to the maintenance account
+      responses:
+        '200':
+          description: Assigned orders
+  /maintenance/orders/{id}/progress:
+    post:
+      summary: Update maintenance progress
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [处理中, 已完成]
+                completionNote:
+                  type: string
+      responses:
+        '200':
+          description: Progress updated
+  /order/create:
+    post:
+      summary: Create a repair order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, desc, location]
+              properties:
+                title:
+                  type: string
+                desc:
+                  type: string
+                location:
+                  type: string
+                phone:
+                  type: string
+      responses:
+        '201':
+          description: Order created

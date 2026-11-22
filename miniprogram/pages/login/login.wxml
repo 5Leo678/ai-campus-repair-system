@@ -1,0 +1,36 @@
+<view class="login-page">
+  <view class="login-card">
+    <view class="login-brand-banner">
+      <view class="brand-mark">
+        <text>报</text>
+        <view class="brand-leaf"></view>
+      </view>
+      <view class="login-heading">
+        <text class="eyebrow">CAMPUS · CARE</text>
+        <text class="title">校园 AI 报修</text>
+        <text class="subtitle">让校园维修更简单，让每份报修都有回应</text>
+      </view>
+      <view class="login-banner-dots">
+        <view class="banner-dot dot-one"></view>
+        <view class="banner-dot dot-two"></view>
+      </view>
+    </view>
+
+    <view class="login-benefit">
+      <view class="benefit-dot"></view>
+      <text class="benefit-icon">✓</text>
+      <text>提交报修 · 跟进进度 · 查看自查建议</text>
+    </view>
+
+    <button
+      class="primary-button login-button"
+      loading="{{loading}}"
+      disabled="{{loading}}"
+      bindtap="handleWechatLogin"
+    >
+      <text class="button-icon">✓</text>微信一键登录
+    </button>
+
+    <text class="privacy-note">仅用于提交和查看本人报修工单</text>
+  </view>
+</view>

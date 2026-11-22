@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/submit/submit",
+    "pages/drafts/drafts",
+    "pages/myorder/myorder",
+    "pages/order-detail/order-detail",
+    "pages/notifications/notifications",
+    "pages/profile/profile",
+    "pages/knowledge/knowledge"
+  ],
+  "window": {
+    "navigationBarTitleText": "校园 AI 报修",
+    "navigationBarBackgroundColor": "#f4f8f5",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f4f8f5"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于报修地点地图选点和工单位置查看"
+    }
+  },
+  "requiredPrivateInfos": [
+    "chooseLocation"
+  ],
+  "tabBar": {
+    "color": "#7b8491",
+    "selectedColor": "#25845f",
+    "backgroundColor": "#fbfdfb",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/submit/submit",
+        "text": "提交报修"
+      },
+      {
+        "pagePath": "pages/myorder/myorder",
+        "text": "我的工单"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "个人资料"
+      },
+      {
+        "pagePath": "pages/knowledge/knowledge",
+        "text": "安全指南"
+      },
+      {
+        "pagePath": "pages/drafts/drafts",
+        "text": "草稿箱"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
