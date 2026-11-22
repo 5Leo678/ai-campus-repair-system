@@ -1,6 +1,6 @@
 # Campus AI Repair System
 
-A full-stack campus repair management system built with a WeChat Mini Program, Vue 3, Element Plus and Express.
+AI-assisted campus repair management system with a WeChat Mini Program, Vue 3 administration and maintenance workbench, Express backend, MySQL and DeepSeek analysis.
 
 ## Features
 
@@ -94,4 +94,3 @@ See [OpenAPI document](docs/openapi.yaml) and [API notes](backend/API.md).
 - Use separate development and production secrets.
 - Rotate any keys that have been committed before the repository becomes public.
 - Restrict production CORS origins and expose the API only through HTTPS.
-
